@@ -1,5 +1,8 @@
 package ru.netology.domain;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class Radio {
     private int firstChannel = 0;
     private int countChannel = 10;
@@ -8,9 +11,6 @@ public class Radio {
     private int minVolume = 0;
     private int maxVolume = 100;
     private int currentVolume;
-
-    public Radio() {
-    }
 
     public Radio(int countChannel) {
         this.countChannel = countChannel;
