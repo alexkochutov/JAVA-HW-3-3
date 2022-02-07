@@ -1,128 +1,155 @@
 package ru.netology.domain;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RadioTest {
 
-    @Test
-    void shouldNotAcceptLessThenPossible() {
-        Radio service = new Radio();
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "shouldNotBeNegativeValue, -1, 0",
+                    "shouldBeEqualFirstChannel, 0, 0",
+                    "shouldBePositiveValue, 1, 1",
+                    "shouldBeLessThenLastChannel, 8, 8",
+                    "shouldBeEqualLastChannel, 9, 9",
+                    "shouldNotBeMoreThenMaxVolume, 10, 0"
+            }, delimiter = ',')
+    void shouldSetCurrentChannel(String testName, int currentChannel, int expected) {
+        Radio radio = new Radio();
 
-        int wrongStationNumber = -1;
-        service.setCurrentStation(wrongStationNumber);
+        radio.setCurrentChannel(currentChannel);
 
-        int expected = 0;
-
-        assertEquals(expected, service.getCurrentStation());
+        assertEquals(expected, radio.getCurrentChannel());
     }
 
-    @Test
-    void shouldNotAcceptMoreThenPossible() {
-        Radio service = new Radio();
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "shouldIncreaseCurrentChannel, 8, 9",
+                    "shouldSetToFirstChannel, 9, 0"
+            }, delimiter = ',')
+    void shouldChangeNextStation(String testName, int currentChannel, int expected) {
+        Radio radio = new Radio();
 
-        int wrongStationNumber = 10;
-        service.setCurrentStation(wrongStationNumber);
+        radio.setCurrentChannel(currentChannel);
+        radio.nextChannel();
 
-        int expected = 0;
-
-        assertEquals(expected, service.getCurrentStation());
+        assertEquals(expected, radio.getCurrentChannel());
     }
 
-    @Test
-    void shouldSelectNextStation() {
-        Radio service = new Radio();
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "shouldDecreaseCurrentChannel, 1, 0",
+                    "shouldSetToFirstChannel, 0, 9"
+            }, delimiter = ',')
+    void shouldChangePrevStation(String testName, int currentChannel, int expected) {
+        Radio radio = new Radio();
 
-        service.setCurrentStation(8);
-        service.nextStation();
+        radio.setCurrentChannel(currentChannel);
+        radio.prevChannel();
 
-        int expected = 9;
-
-        assertEquals(expected, service.getCurrentStation());
+        assertEquals(expected, radio.getCurrentChannel());
     }
 
-    @Test
-    void shouldJumpToFirstStation() {
-        Radio service = new Radio();
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "shouldNotBeNegativeValue, -1, 0",
+                    "shouldBeEqualFirstChannel, 0, 0",
+                    "shouldBePositiveValue, 1, 1",
+                    "shouldBeLessThenLastChannel, 98, 98",
+                    "shouldBeEqualLastChannel, 99, 99",
+                    "shouldNotBeMoreThenMaxVolume, 100, 0"
+            }, delimiter = ',')
+    void shouldSetCurrentChannelForCustomConstructor(String testName, int currentChannel, int expected) {
+        Radio radio = new Radio(100);
 
-        service.setCurrentStation(9);
-        service.nextStation();
+        radio.setCurrentChannel(currentChannel);
 
-        int expected = 0;
-
-        assertEquals(expected, service.getCurrentStation());
+        assertEquals(expected, radio.getCurrentChannel());
     }
 
-    @Test
-    void shouldSelectPrevStation() {
-        Radio service = new Radio();
 
-        service.setCurrentStation(1);
-        service.prevStation();
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "shouldIncreaseCurrentChannel, 98, 99",
+                    "shouldSetToFirstChannel, 99, 0"
+            }, delimiter = ',')
+    void shouldChangeNextStationForCustomConstructor(String testName, int currentChannel, int expected) {
+        Radio radio = new Radio(100);
 
-        int expected = 0;
+        radio.setCurrentChannel(currentChannel);
+        radio.nextChannel();
 
-        assertEquals(expected, service.getCurrentStation());
+        assertEquals(expected, radio.getCurrentChannel());
     }
 
-    @Test
-    void shouldJumpToLastStation() {
-        Radio service = new Radio();
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "shouldDecreaseCurrentChannel, 1, 0",
+                    "shouldSetToFirstChannel, 0, 99"
+            }, delimiter = ',')
+    void shouldChangePrevStationForCustomConstructor(String testName, int currentChannel, int expected) {
+        Radio radio = new Radio(100);
 
-        service.setCurrentStation(0);
-        service.prevStation();
+        radio.setCurrentChannel(currentChannel);
+        radio.prevChannel();
 
-        int expected = 9;
-
-        assertEquals(expected, service.getCurrentStation());
+        assertEquals(expected, radio.getCurrentChannel());
     }
 
-    @Test
-    void shouldIncreaseVolume() {
-        Radio service = new Radio();
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "shouldNotBeNegativeValue, -1, 0",
+                    "shouldBeEqualZero, 0, 0",
+                    "shouldBePositiveValue, 1, 1",
+                    "shouldBeLessThenMaxVolume, 99, 99",
+                    "shouldBeEqualMaxVolume, 100, 100",
+                    "shouldNotBeMoreThenMaxVolume, 101, 0"
+            }, delimiter = ',')
+    void shouldSetCurrentVolume(String testName, int currentVolume, int expected) {
+        Radio radio = new Radio();
 
-        service.setCurrentVolume(5);
-        service.increaseVolume();
+        radio.setCurrentVolume(currentVolume);
 
-        int expected = 6;
-
-        assertEquals(expected, service.getCurrentVolume());
+        assertEquals(expected, radio.getCurrentVolume());
     }
 
-    @Test
-    void shouldNotIncreaseVolume() {
-        Radio service = new Radio();
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "shouldBeLessThenMaxVolume, 99, 100",
+                    "shouldNotBeMoreThenMaxVolume, 100, 100"
+            }, delimiter = ',')
+    void shouldIncreaseCurrentVolume(String testName, int currentVolume, int expected) {
+        Radio radio = new Radio();
 
-        service.setCurrentVolume(10);
-        service.increaseVolume();
+        radio.setCurrentVolume(currentVolume);
+        radio.increaseVolume();
 
-        int expected = 10;
-
-        assertEquals(expected, service.getCurrentVolume());
+        assertEquals(expected, radio.getCurrentVolume());
     }
 
-    @Test
-    void shouldDecreaseVolume() {
-        Radio service = new Radio();
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "shouldBeMoreThenMinVolume, 1, 0",
+                    "shouldNotBeLessThenMinVolume, 0, 0"
+            }, delimiter = ',')
+    void shouldDecreaseCurrentVolume(String testName, int currentVolume, int expected) {
+        Radio radio = new Radio();
 
-        service.setCurrentVolume(5);
-        service.decreaseVolume();
+        radio.setCurrentVolume(currentVolume);
+        radio.decreaseVolume();
 
-        int expected = 4;
-
-        assertEquals(expected, service.getCurrentVolume());
+        assertEquals(expected, radio.getCurrentVolume());
     }
 
-    @Test
-    void shouldNotDecreaseVolume() {
-        Radio service = new Radio();
-
-        service.setCurrentVolume(0);
-        service.decreaseVolume();
-
-        int expected = 0;
-
-        assertEquals(expected, service.getCurrentVolume());
-    }
 }
